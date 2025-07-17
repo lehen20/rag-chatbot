@@ -26,6 +26,7 @@ Built using **LangGraph**, **LanceDB**, **FastAPI**, and **Streamlit**.
 Install dependencies
 ```bash
 conda create -n chatbot python=3.10
+conda activate chatbot
 pip install -r requirements.txt
 ```
 
