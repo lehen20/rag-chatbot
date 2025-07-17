@@ -32,9 +32,9 @@ if st.session_state.step == "initial":
     # Only add to history once
     if not any(m["role"] == "assistant" and m["content"] == prompt_question for m in st.session_state.history):
         st.session_state.history.append({"role": "assistant", "content": prompt_question})
-
+        
     # Display entire history
-    for msg in st.session_state.history:
+    for msg in st.session_state.history[-10:]:
         st.chat_message(msg["role"]).write(msg["content"])
         
     user_input = st.chat_input("Describe your query")
@@ -43,6 +43,7 @@ if st.session_state.step == "initial":
         st.session_state.history.append({"role": "user", "content": user_input})
         state = {"prompt": user_input, "data": {}}
         result = st.session_state.graph.invoke(state)
+
         st.session_state.state = result
         st.session_state.current_missing = result.get("missing_fields", [])
         st.session_state.field_index = 0
@@ -97,6 +98,7 @@ elif st.session_state.step == "collect_fields":
                     state = st.session_state.state
                     state["prompt"] = ""
                     result = st.session_state.graph.invoke(state)
+
                     st.session_state.state = result
                     st.session_state.step = "done"
                     st.rerun()

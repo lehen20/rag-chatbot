@@ -4,7 +4,6 @@ from langchain.schema import AIMessage
 import re
 import os 
 import yaml
-import time
 
 if not os.path.exists('config.yml'):
     raise FileNotFoundError()
@@ -41,15 +40,13 @@ def classify_intent_with_memory(prompt: str) -> str:
     memory.chat_memory.add_user_message(prompt)
 
     full_context = [
-        {"role": "system", "content": "Classify the user's intent as one of the following: complaint_create, status_check, or other. Respond ONLY with the label."}
+        {"role": "system", "content": "Classify the user's intent as one of the following: complaint_create, status_check, policy_question or other. Respond ONLY with the label."}
     ]
 
     for msg in get_memory_messages()[-5:]:
         role = "assistant" if isinstance(msg, AIMessage) else "user"
         full_context.append({"role": role, "content": msg.content})
-        
-    start_time = time.time()
-    
+            
     response = client.chat.completions.create(
         model="meta-llama/llama-4-scout-17b-16e-instruct",
         messages=full_context,
@@ -60,10 +57,31 @@ def classify_intent_with_memory(prompt: str) -> str:
         stop=None,
     )
     label = response.choices[0].message.content.strip().lower()
-    print(f"{label=}")
+    # print(f"{label=}")
     memory.chat_memory.add_ai_message(label)
-    print(f'{time.time() - start_time=}')
+    # print(f'{time.time() - start_time=}')
     return label
+
+def call_llm_with_prompt(context_text, user_prompt):
+    # memory.chat_memory.add_user_message(user_prompt)
+
+    full_context = [
+        {"role": "system", "content": f"Answer the following using context:\n{context_text}\n\nQuestion: {user_prompt}"}
+    ]
+            
+    response = client.chat.completions.create(
+        model="meta-llama/llama-4-scout-17b-16e-instruct",
+        messages=full_context,
+        temperature=0,
+        max_completion_tokens=200,
+        top_p=0,
+        stream=False,
+        stop=None,
+    )
+    label = response.choices[0].message.content.strip().lower()
+    return label
+
+
 
 # IN CASE NEED TO USE TOGETHER INSTEAD OF GROQ
 # from together import Together
