@@ -2,15 +2,15 @@
 
 A Retrieval-Augmented Generation (RAG) based chatbot that enables users to:
 
-- 📝 Create new grievance complaints via API.
-- 🔍 Check the status of an existing complaint.
-- 📄 ADDITIONAL FEATURE: Ask policy/SOP-based questions from internal documents.
+- Create new grievance complaints via API.
+- Check the status of an existing complaint.
+- **ADDITIONAL FEATURE: Ask policy/SOP-based questions from internal documents.**
 
 Built using **LangGraph**, **LanceDB**, **FastAPI**, and **Streamlit**.
 
 ---
 
-## 🚀 Features
+## Features
 
 - Classifies user prompts into:
   - **Grievance Creation**
