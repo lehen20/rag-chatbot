@@ -3,7 +3,7 @@ import hashlib
 import lancedb
 from pypdf import PdfReader
 import pyarrow as pa
-from rag.embedding import embed_model
+from embedding import embed_model
 
 # Init
 docs_folder = "documents" 
